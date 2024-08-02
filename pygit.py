@@ -44,7 +44,7 @@ def init(repo):
     for name in ['objects', 'refs', 'refs/heads']:
         os.mkdir(os.path.join(repo, '.git', name))
     write_file(os.path.join(repo, '.git', 'HEAD'), b'ref: refs/heads/master')
-    print('initialized empty repository: {}'.format(repo))
+    print('Initialized empty repository: {}'.format(repo))
 
 # The hash_object function hashes and writes a single object to the .git/objects “database”.
 # There are three types of objects in the Git model: blobs (ordinary files), commits, and trees (these represent the state of a single directory).
@@ -79,7 +79,7 @@ def find_object(sha1_prefix):
     if not objects:
         raise ValueError('object {!r} not found'.format(sha1_prefix))
     if len(objects) >= 2:
-        raise ValueError('multiple objects ({}) with prefix {!r}'.format(
+        raise ValueError('Multiple objects ({}) with prefix {!r}'.format(
                 len(objects), sha1_prefix))
     return os.path.join(obj_dir, objects[0])
 
