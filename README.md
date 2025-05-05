@@ -1,56 +1,90 @@
-A Git client written in python to create a repo, commit, and push itself to GitHub and it also implements status, diff, cat-file, ls-files, and hash-object.
+# PyGit
 
-$ python3 misc/pygit.py init pygit
-initialized empty repository: pygit
+A lightweight Git client implementation in Python that re-implements core Git commands in under 500 lines of code. This project demonstrates the fundamental concepts of Git's object model and pack protocol using Python's standard library modules.
 
-$ cd pygit
+## Features
 
-# ... write and test pygit.py using a test repo ...
+- Core Git functionality including:
+  - Repository initialization (`init`)
+  - File staging (`add`)
+  - Commit creation (`commit`)
+  - Status checking (`status`)
+  - Diff viewing (`diff`)
+  - Remote operations (`push`)
+- Implements Git's object model (blobs, trees, commits)
+- Handles Git's pack protocol for efficient data transfer
+- Uses standard library modules:
+  - `struct` for binary data handling
+  - `zlib` for compression
+  - `hashlib` for SHA-1 hashing
 
-$ python3 pygit.py status
-new files:
-    pygit.py
+## Requirements
 
-$ python3 pygit.py add pygit.py
+- Python 3.x
+- Standard library modules (no external dependencies)
 
-$ python3 pygit.py commit -m "First working version of pygit"
-committed to master: 00d56c2a774147c35eeb7b205c0595cf436bf2fe
+## Usage
 
-$ python3 pygit.py cat-file commit 00d5
-tree 7758205fe7dfc6638bd5b098f6b653b2edd0657b
-author Yash Bhalgat <yashbhalgat9657@gmail.com> 1493169321 -0500
-committer Yash Bhalgat <yashbhalgat9657@gmail.com> 1493169321 -0500
+### Basic Commands
 
-First working version of pygit
+```bash
+# Initialize a new repository
+python pygit.py init <repo-name>
 
-# ... make some changes ...
+# Add files to staging
+python pygit.py add <file1> <file2> ...
 
-$ python3 pygit.py status
-changed files:
-    pygit.py
+# Create a commit
+python pygit.py commit -m "commit message"
 
-$ python3 pygit.py diff
---- pygit.py (index)
-+++ pygit.py (working copy)
-@@ -100,8 +100,9 @@
-     """
-     obj_type, data = read_object(sha1_prefix)
-     if mode in ['commit', 'tree', 'blob']:
--        assert obj_type == mode, 'expected object type {}, got {}'.format(
--                mode, obj_type)
-+        if obj_type != mode:
-+            raise ValueError('expected object type {}, got {}'.format(
-+                    mode, obj_type))
-         sys.stdout.buffer.write(data)
-     elif mode == '-s':
-         print(len(data))
+# Check repository status
+python pygit.py status
 
-$ python3 pygit.py add pygit.py
+# View changes
+python pygit.py diff
 
-$ python3 pygit.py commit -m "Graceful error exit for cat-file with bad
-    object type"
-committed to master: 4117234220d4e9927e1a626b85e33041989252b5
+# Push changes to remote
+python pygit.py push <remote-url>
+```
 
-$ python3 pygit.py push https://github.com/yash9657/pygit.git
-updating remote master from no commits to
-    4117234220d4e9927e1a626b85e33041989252b5 (6 objects)
+### Environment Variables
+
+The following environment variables can be set in a `.env` file:
+
+- `GIT_AUTHOR_NAME`: Your name
+- `GIT_AUTHOR_EMAIL`: Your email
+- `GIT_USERNAME`: Remote repository username
+- `GIT_PASSWORD`: Remote repository password
+
+## Implementation Details
+
+PyGit implements the core concepts of Git:
+
+1. **Object Model**:
+   - Blobs: Store file contents
+   - Trees: Represent directory structure
+   - Commits: Store metadata and reference to tree
+
+2. **Index**:
+   - Tracks staged changes
+   - Maintains file metadata
+
+3. **Pack Protocol**:
+   - Efficient transfer of objects
+   - Delta compression
+
+## Project Structure
+
+```
+pygit/
+├── pygit.py      # Main implementation
+└── .env          # Environment configuration
+```
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. 
